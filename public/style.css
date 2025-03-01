@@ -1,0 +1,48 @@
+/* Imposta il corpo della pagina */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black; /* Fallback se l'immagine non si carica */
+}
+
+/* Sfondo adattato al formato 393x852 */
+.container {
+    width: 393px;
+    height: 852px;
+    background-image: url("HOME\ -\ FOTOCAMERA.png");  /* Cambia se l'immagine ha un altro nome */
+    background-size: contain;  /* Mostra l'intera immagine senza tagliarla */
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Mantieni il bottone in basso */
+}
+
+/* Stile del bottone trasparente */
+#scan-btn {
+    position: absolute;
+    width: 160px;  /* Modifica per regolare il diametro */
+    height: 160px; /* Modifica per regolare il diametro */
+    border-radius: 50%; /* Lo rende rotondo */
+    background: transparent; /* Sfondo trasparente */
+    border: 3px solid white; /* Bordo bianco per renderlo visibile */
+    cursor: pointer;
+    bottom: 130px; /* Distanza dal fondo, regolato per essere un po' più in alto */
+    z-index: 10; /* Garantisce che il bottone sia sopra il video */
+}
+
+/* Stile per il video */
+#camera {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garantisce che il video copra tutto lo spazio */
+    z-index: 1; /* Il video deve essere sotto il bottone */
+}

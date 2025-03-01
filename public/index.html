@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vela</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            font-size: 2rem;
-        }
-    </style>
+    <title>Web App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    Vela
+    <div class="container">
+        <button id="scan-btn"></button>
+        <!-- Elemento per mostrare il flusso video della fotocamera -->
+        <video id="camera" autoplay></video>
+    </div>
+
+    <script>
+        document.getElementById('scan-btn').addEventListener('click', function() {
+            // Chiede accesso alla fotocamera
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        // Collega il flusso video alla sorgente del tag <video>
+                        document.getElementById('camera').srcObject = stream;
+                    })
+                    .catch(function(error) {
+                        console.error("Errore nell'accesso alla fotocamera: ", error);
+                    });
+            } else {
+                alert("La fotocamera non è supportata dal tuo browser.");
+            }
+        });
+    </script>
 </body>
 </html>
