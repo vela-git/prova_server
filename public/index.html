@@ -1,34 +1,21 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web App</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Riconoscimento Carte</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <button id="scan-btn"></button>
-        <!-- Elemento per mostrare il flusso video della fotocamera -->
-        <video id="camera" autoplay></video>
-    </div>
+  <div class="container">
+    <!-- Video che mostrerà la fotocamera -->
+    <video id="camera" autoplay playsinline></video>
+    
+    <!-- Pulsante circolare per avviare la scansione -->
+    <button id="scan-btn"></button>
+  </div>
 
-    <script>
-        document.getElementById('scan-btn').addEventListener('click', function() {
-            // Chiede accesso alla fotocamera
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function(stream) {
-                        // Collega il flusso video alla sorgente del tag <video>
-                        document.getElementById('camera').srcObject = stream;
-                    })
-                    .catch(function(error) {
-                        console.error("Errore nell'accesso alla fotocamera: ", error);
-                    });
-            } else {
-                alert("La fotocamera non è supportata dal tuo browser.");
-            }
-        });
-    </script>
+  <!-- Aggiungo lo script per gestire la fotocamera e l'invio al server -->
+  <script src="scripts.js"></script>
+
 </body>
 </html>

@@ -13,27 +13,27 @@ body {
 .container {
     width: 393px;
     height: 852px;
-    background-image: url("HOME\ -\ FOTOCAMERA.png");  /* Cambia se l'immagine ha un altro nome */
+    background-image: url("HOME - FOTOCAMERA.png"); /* Assicurati che il file esista in /public */
     background-size: contain;  /* Mostra l'intera immagine senza tagliarla */
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* Mantieni il bottone in basso */
+    align-items: flex-end; /* Mantiene il bottone in basso */
 }
 
-/* Stile del bottone trasparente */
+/* Stile del bottone circolare */
 #scan-btn {
     position: absolute;
-    width: 160px;  /* Modifica per regolare il diametro */
-    height: 160px; /* Modifica per regolare il diametro */
-    border-radius: 50%; /* Lo rende rotondo */
+    width: 160px;  /* Diametro del pulsante */
+    height: 160px;
+    border-radius: 50%;
     background: transparent; /* Sfondo trasparente */
-    border: 3px solid white; /* Bordo bianco per renderlo visibile */
+    border: 3px solid white; /* Bordo bianco */
     cursor: pointer;
-    bottom: 130px; /* Distanza dal fondo, regolato per essere un po' più in alto */
-    z-index: 10; /* Garantisce che il bottone sia sopra il video */
+    bottom: 130px; /* Distanza dal fondo */
+    z-index: 10;   /* In primo piano sul video */
 }
 
 /* Stile per il video */
@@ -43,6 +43,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Garantisce che il video copra tutto lo spazio */
-    z-index: 1; /* Il video deve essere sotto il bottone */
+    object-fit: cover; /* Copre tutto lo spazio in modo proporzionato */
+    z-index: 1; /* Sotto il pulsante */
 }
