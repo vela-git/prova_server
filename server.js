@@ -1,44 +1,62 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
+const { spawn } = require('child_process');
+
 const app = express();
-
-// Per gestire i body in formato JSON (fino a 10MB di immagine)
 app.use(express.json({ limit: '10mb' }));
-
-// Servire i file statici (index.html, style.css, script.js) dalla cartella "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Endpoint per ricevere l'immagine
+// Percorso al file di pesi YOLO e allo script di inferenza
+const YOLO_WEIGHTS = path.join(__dirname, 'best.pt');
+const YOLO_SCRIPT = path.join(__dirname, 'detect_cards.py');
+
 app.post('/upload', async (req, res) => {
   try {
-    // L'immagine è in base64 in req.body.image
     const { image } = req.body;
-    if (!image) {
-      return res.status(400).json({ error: 'Nessuna immagine ricevuta' });
-    }
+    if (!image) return res.status(400).json({ error: 'Nessuna immagine' });
 
-    // Converte la base64 in buffer
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, ''); // Rimuovi intestazione base64
     const buffer = Buffer.from(base64Data, 'base64');
 
-    // A questo punto potresti passare 'buffer' a un sistema di riconoscimento (OpenCV, CNN, ecc.)
-    // Per ora facciamo un "fake" recognition:
-    const recognizedCardName = "Tagging"; // mock
+    const tempPath = path.join(__dirname, 'temp.jpg');  // Salva su file temporaneo
+    fs.writeFileSync(tempPath, buffer);
 
-    // Rispondo con un oggetto JSON
-    return res.json({
-      cardName: recognizedCardName,
-      description: "Esempio di carta fittizia con poteri marini."
+    const py = spawn('python', [YOLO_SCRIPT, YOLO_WEIGHTS, tempPath]);   // Esegui lo script Python: python detect_cards.py best.pt temp.jpg
+
+    let resultData = '';
+    let errorData = '';
+    py.stdout.on('data', (data) => {
+      resultData += data.toString();
     });
 
-  } catch (error) {
-    console.error("Errore durante l'upload:", error);
-    res.status(500).json({ error: 'Errore del server' });
+    py.stderr.on('data', (data) => {
+      errorData += data.toString();
+    });
+
+    py.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Python script error code:', code, errorData);
+        return res.status(500).json({ error: 'Errore nello script Python', details: errorData });
+      }
+      try {
+        const output = JSON.parse(resultData); // output è tipo { cardName: 'Carta3', confidence: 0.87 } 
+        return res.json(output);
+      } catch (parseErr) {
+        console.error('Errore parsing JSON:', parseErr, resultData);
+        return res.status(500).json({ error: 'Errore parse JSON', details: resultData });
+      }
+    });
+    
+  } catch (err) {
+    console.error("Errore in /upload:", err);
+    res.status(500).json({ error: "Errore del server" });
   }
 });
 
-// Avvio del server
-const PORT = process.env.PORT || 3000;
+
+
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server avviato su http://localhost:${PORT}`);
 });
