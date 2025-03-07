@@ -46,3 +46,16 @@ body {
     object-fit: cover; /* Copre tutto lo spazio in modo proporzionato */
     z-index: 1; /* Sotto il pulsante */
 }
+
+
+#card-display {
+    position: absolute;
+    width: 80%;  /* Larghezza dell'immagine grande */
+    max-width: 400px; /* Limite massimo */
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: none; /* Inizialmente nascosta */
+}

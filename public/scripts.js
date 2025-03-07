@@ -1,6 +1,8 @@
 // Selettori
 const scanBtn = document.getElementById('scan-btn');
 const camera = document.getElementById('camera');
+const cardDisplay = document.getElementById('card-display');
+
 // Variabile per conservare il media stream
 let stream = null;
 
@@ -14,46 +16,41 @@ async function startCamera() {
   }
 }
 
-//Cattura un frame dal video e lo invia al server
 async function captureAndSendFrame() {
-    try {
-        const canvas = document.createElement('canvas'); // Creazione di un canvas per catturare un frame dal video
-        const context = canvas.getContext('2d');
-      
-        canvas.width = camera.videoWidth || camera.clientWidth;  // Imposta la dimensione del canvas in base al video
-        canvas.height = camera.videoHeight || camera.clientHeight;
- 
-        context.drawImage(camera, 0, 0, canvas.width, canvas.height); // Disegna il frame della fotocamera nel canvas
-        const dataURL = canvas.toDataURL('image/jpeg'); // Converte l'immagine in base64
+  try {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
 
-        // Invio al server
-        const response = await fetch('/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: dataURL }) // Invio dell'immagine
-        });
+      canvas.width = camera.videoWidth || camera.clientWidth;
+      canvas.height = camera.videoHeight || camera.clientHeight;
 
-        const result = await response.json();
-        console.log("Risposta dal server:", result);
+      context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/jpeg');
 
+      // Invio al server
+      const response = await fetch('/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: dataURL })
+      });
 
-        alert("Carta riconosciuta: " + result.cardName + " con una confidenza di " + result.confidence);
+      const result = await response.json();
+      console.log("Risposta dal server:", result);
 
-        // Controllo del nome della carta
-        /*if (result.cardName === 'Tagging') {
-            window.location.href = '/Schermate/tagging.html';
-            return;
-        }
+      if (result.cardName) {
+          camera.style.display = "none";
+          scanBtn.style.display = "none";
+          stream.getTracks().forEach(track => track.stop());
+    
 
-        if (result.cardName === 'SqualoMartello') {
-            alert("Carta: Squalo Martello!");
-        } else {
-            alert("Carta non riconosciuta o errore.");
-        }
-        */
-    } catch (error) {
-        console.error("Errore durante la POST:", error);
-    }
+          // Mostra l'immagine della carta
+          cardDisplay.src = `/Illustrazioni/${result.cardName}.jpg`; 
+          cardDisplay.style.display = "block"; 
+      }
+
+  } catch (error) {
+      console.error("Errore durante la POST:", error);
+  }
 }
 
 
