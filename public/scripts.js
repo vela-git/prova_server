@@ -6,8 +6,12 @@ const cardDisplay = document.getElementById('card-display');
 // Variabile per conservare il media stream
 let stream = null;
 
-//Avvia la fotocamera usando getUserMedia
+// Avvia la fotocamera usando getUserMedia
 async function startCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    console.error("Il browser non supporta getUserMedia.");
+    return;
+  }
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
     camera.srcObject = stream;
@@ -42,7 +46,6 @@ async function captureAndSendFrame() {
           scanBtn.style.display = "none";
           stream.getTracks().forEach(track => track.stop());
     
-
           // Mostra l'immagine della carta
           cardDisplay.src = `/Illustrazioni/${result.cardName}.jpg`; 
           cardDisplay.style.display = "block"; 
@@ -53,16 +56,36 @@ async function captureAndSendFrame() {
   }
 }
 
-
-/**
- * Gestore del click sul pulsante
- */
-scanBtn.addEventListener('click', async () => {
-  // Se la fotocamera non è ancora avviata, la avviamo
+// Gestore del click/touch sul pulsante
+async function handleScan() {
   if (!stream) {
     await startCamera();
   } else {
-    // Altrimenti catturiamo e inviamo subito il frame
     captureAndSendFrame();
   }
+}
+
+scanBtn.addEventListener('click', handleScan);
+scanBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // Previene doppie attivazioni in alcuni dispositivi
+  handleScan();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Simula il completamento della fase di caricamento (puoi sostituire questo con la logica effettiva)
+  setTimeout(() => {
+    // Avvia la transizione: nascondi il loading e mostra la homepage
+    const loading = document.getElementById('loading');
+    const homepage = document.getElementById('homepage');
+
+    // Animazione di uscita per il loading
+    loading.style.opacity = 0;
+    
+    // Dopo il fade-out del loading, mostra la homepage
+    setTimeout(() => {
+      homepage.style.opacity = 1;
+      // Se vuoi, puoi anche rimuovere il loading dalla DOM
+      loading.style.display = 'none';
+    }, 1000); // deve essere uguale o superiore alla durata della transizione (1s in questo esempio)
+  }, 2000); // Simula un tempo di caricamento di 2 secondi
 });

@@ -12,60 +12,66 @@
     font-family: 'Galindo', sans-serif;
   }
   
-  /* Contenitore principale */
   .container {
     position: relative;
     width: 100%;
     height: 100%;
   }
   
-  /* Stili comuni per le pagine */
+  /* Stili comuni per le sezioni della pagina */
   .page {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
   }
   
-  /* Sezione Loading */
+  /* Loading: sfondo scuro e logo centrale */
   .loading {
     background: url('../images/dark-bg.png') center center no-repeat;
     background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 1;
     z-index: 2;
   }
   
-  /* Logo della loading page */
-  #logo-loading {
+/* Stato iniziale */
+#logo-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 250px;
-    height: auto;
-    transition: transform 1s ease-in-out;
+    transition: all 1s ease-in-out;
+    cursor: pointer;
   }
   
-  /* Sezione Homepage */
+  /* Stato di transizione: spostamento in alto e rimpicciolimento */
+  #logo-loading.transition {
+    top: 40px;
+    left: 50%;
+    transform: translate(-50%, 0);  /* Mantenendo -50% orizzontale, ma azzerando lo spostamento verticale */
+    width: 220px;
+  }
+  
+  /* Homepage: sfondo dinamico con colore celeste e pattern animato */
   .homepage {
-    background-color: #8dd2f6; /* Colore di base celeste */
-    /* Pattern dinamico di sfondo */
+    background-color: #8dd2f6; /* Celeste di base */
     background-image: url('../images/the-sip-pattern.png');
     background-repeat: repeat;
-    background-size: 80px 80px;
+    background-size: 150px 150px;
     animation: diagonalScroll 20s linear infinite;
-    opacity: 0; /* Inizialmente nascosta */
+    opacity: 1;
     z-index: 1;
   }
   
-  /* Keyframes per lo scroll diagonale del pattern */
+  /* Animazione per lo scroll diagonale del pattern */
   @keyframes diagonalScroll {
-    0% { background-position: 100% 0%; }
-    100% { background-position: 0% 100%; }
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
   }
   
-  /* Logo in alto nella homepage */
+  /* Logo nella homepage (posizionato in alto, centrato) */
   #logo-container {
     position: absolute;
     top: 40px;
@@ -78,7 +84,7 @@
     height: auto;
   }
   
-  /* Icona fotocamera nella homepage */
+  /* Icona fotocamera */
   #camera-icon {
     position: absolute;
     top: 70%;
@@ -88,7 +94,7 @@
     height: auto;
   }
   
-  /* Sezione inferiore con autori e footer */
+  /* Sezione inferiore: autori e copyright agli estremi */
   #bottom-section {
     position: absolute;
     bottom: 20px;
@@ -99,21 +105,18 @@
     padding: 0 20px;
   }
   
-  /* Autori e footer (colonne: immagine sopra, testo sotto) */
   #autori, #footer {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  /* Dimensioni delle immagini delle bimbe */
   .bimba {
     width: 90px;
     height: auto;
     margin-bottom: 5px;
   }
   
-  /* Testo in basso */
   .bottom-text {
     font-size: 16px;
     color: #333;

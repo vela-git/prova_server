@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sip Homepage</title>
+    <style>
+        /* Imposta il background */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('images/light-bg.png'); /* Assicurati che il file sia nella stessa cartella */
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Stile per il testo */
+        .moving-text {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="moving-text">The Sip</div>
+
+    <script>
+        function moveText() {
+            const text = document.querySelector('.moving-text');
+            const maxX = window.innerWidth - text.clientWidth;
+            const maxY = window.innerHeight - text.clientHeight;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            text.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Muove il testo ogni 2 secondi
+        setInterval(moveText, 2000);
+    </script>
+</body>
+</html>
