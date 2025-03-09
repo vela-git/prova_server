@@ -1,0 +1,56 @@
+/* Reset di base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Galindo', sans-serif;
+  }
+  
+  /* Contenitore principale */
+  #autori-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* Immagine di sfondo */
+    background: url('../images/copyrights.png') center center no-repeat;
+    background-size: cover;
+  }
+  
+  /*Link "Torna alla Home" in alto a sinistra */
+  #back-home {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 120px;  /* regola in base alle dimensioni desiderate */
+    height: auto;
+    cursor: pointer; /* per indicare che è cliccabile */
+    white-space: nowrap;
+  }
+  
+  /* Titolo della pagina (testo) */
+  #page-title {
+    position: absolute;
+    top: 90px;        /* distanza dall'alto, regola a piacere */
+    width: 100%;
+    text-align: center;
+    font-size: 48;  /* dimensione del testo, regola a piacere */
+    color: #000;      /* colore del testo */
+  }
+  
+
+  /* Immagine bimba centrata orizzontalmente, un po' più in basso */
+  #bimba {
+    position: absolute;
+    top: 160px;       /* regola in base al layout desiderato */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;   /* dimensioni regolabili */
+    height: auto;
+  }
+

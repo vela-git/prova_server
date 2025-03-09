@@ -24,16 +24,21 @@
       <div id="logo-container">
         <img id="logo-home" src="images/logo.png" alt="The Sip Logo">
       </div>
-      <!-- Icona fotocamera al centro della homepage -->
-      <img id="camera-icon" src="images/camera.png" alt="Camera Icon">
-      <!-- Sezione inferiore: autori a sinistra e copyright a destra -->
+      <!-- Icona fotocamera (già presente) -->
+      <img id="camera-icon" src="images/camera.png" alt="Camera Icon" />
+      <!-- Video per mostrare l’anteprima della fotocamera (inizialmente nascosto?) -->
+      <video id="camera" autoplay playsinline muted style="display: none;"></video>
+      <!-- Un contenitore (img o div) per mostrare l’immagine/carta riconosciuta -->
+      <img id="card-display" style="display: none;" />
+
+      <!-- Sezione inferiore: bimba1 (pulsante per "Gli autori") a sinistra e footer a destra -->
       <div id="bottom-section">
-        <div id="autori">
+        <div id="bimba1">
           <img src="images/bimba1.png" alt="Immagine autori" class="bimba">
           <span class="bottom-text">Gli autori</span>
         </div>
-        <div id="footer">
-          <img src="images/bimba2.png" alt="Immagine footer" class="bimba">
+        <div id="bimba2">
+          <img src="images/bimba2.png" alt="Immagine copyright" class="bimba">
           <span class="bottom-text">Copyright</span>
         </div>
       </div>

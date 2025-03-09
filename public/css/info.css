@@ -1,0 +1,44 @@
+/* Reset di base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Galindo', sans-serif; /* Mantieni lo stesso font */
+  }
+  
+  /* Contenitore principale */
+  #info-page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url('../images/info.png') center center no-repeat;
+    background-size: cover;
+  }
+  
+  /* Testo "Torna alla carta" in alto a sinistra */
+  #back-to-card {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    font-size: 15px;  /* Regola a piacere */
+    color: #fff;      /* Se lo sfondo è scuro, bianco risalta */
+    cursor: pointer;
+  }
+  
+  
+  /* Logo in basso, centrato orizzontalmente */
+  #logo-info {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;  
+    height: auto;
+}
+  

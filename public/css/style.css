@@ -41,17 +41,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 250px;
+    width: 340px;
     transition: all 1s ease-in-out;
     cursor: pointer;
   }
   
   /* Stato di transizione: spostamento in alto e rimpicciolimento */
   #logo-loading.transition {
-    top: 40px;
+    top: 170px;
     left: 50%;
-    transform: translate(-50%, 0);  /* Mantenendo -50% orizzontale, ma azzerando lo spostamento verticale */
-    width: 220px;
+    transform: translate(-50, 0);  /* Mantenendo -50% orizzontale, ma azzerando lo spostamento verticale */
+    width: 220px; /* Rimpicciolimento ridotto */
   }
   
   /* Homepage: sfondo dinamico con colore celeste e pattern animato */
@@ -93,8 +93,6 @@
     width: 130px;
     height: auto;
   }
-  
-  /* Sezione inferiore: autori e copyright agli estremi */
   #bottom-section {
     position: absolute;
     bottom: 20px;
@@ -105,20 +103,24 @@
     padding: 0 20px;
   }
   
-  #autori, #footer {
+  /* Per avere immagine sopra e testo sotto */
+  #bimba1,
+  #bimba2 {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     align-items: center;
   }
   
+  /* Regola la dimensione dell'immagine se vuoi */
   .bimba {
-    width: 90px;
+    width: 80px; /* o quanto preferisci */
     height: auto;
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* spazio tra immagine e testo */
+    cursor:pointer;
   }
   
   .bottom-text {
-    font-size: 16px;
-    color: #333;
+    font-size: 14px; /* regola a piacere */
+    color: #333;     /* colore del testo */
   }
   
