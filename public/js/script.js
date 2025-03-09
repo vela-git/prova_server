@@ -1,132 +1,138 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Sezione Loading: transizione del logo
+  // SEZIONE LOADING: transizione del logo
   const logoLoading = document.getElementById('logo-loading');
   const loadingSection = document.getElementById('loading');
   
-  // Al click sul logo della loading page
   logoLoading.addEventListener('click', () => {
-    // Aggiunge la classe per innescare la transizione (rimpicciolimento e spostamento)
+    // Innesca la transizione (rimpicciolimento e spostamento)
     logoLoading.classList.add('transition');
     
-    // Quando la transizione finisce, nascondi la sezione di loading
+    // Al termine della transizione, nasconde la sezione loading
     logoLoading.addEventListener('transitionend', () => {
       loadingSection.style.display = 'none';
     }, { once: true });
   });
-
-  // Aggiunge il listener sul pulsante "bimba1" per navigare a "autori.html"
+  
+  // Listener sul pulsante "bimba1" per navigare a autori.html
   const bimba1 = document.getElementById('bimba1');
   if (bimba1) {
     bimba1.addEventListener('click', () => {
       window.location.href = 'autori.html';
     });
   }
-
-  // Aggiunge il listener sul pulsante "bimba2" per navigare a "copyright.html"
+  
+  // Listener sul pulsante "bimba2" per navigare a copyrights.html
   const bimba2 = document.getElementById('bimba2');
   if (bimba2) {
     bimba2.addEventListener('click', () => {
       window.location.href = 'copyrights.html';
     });
   }
-});
-
-
-// Selettori
-const cameraIcon = document.getElementById('camera-icon');
-const camera = document.getElementById('camera');        // <video id="camera" ...> in HTML
-const cardDisplay = document.getElementById('card-display'); // <img id="card-display" ...> in HTML
-
-// Variabile per conservare il media stream
-let stream = null;
-
-/**
- * Avvia la fotocamera usando getUserMedia
- */
-async function startCamera() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    console.error("Il browser non supporta getUserMedia.");
-    return;
-  }
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-    // Collega lo stream al <video id="camera">
-    camera.srcObject = stream;
-    camera.style.display = 'block'; // se vuoi mostrarlo a schermo
-  } catch (err) {
-    console.error("Errore nell'accedere alla fotocamera:", err);
-  }
-}
-
-/**
- * Cattura un frame e lo invia al server
- */
-async function captureAndSendFrame() {
-  try {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-
-    // Imposta le dimensioni del canvas in base al video
-    canvas.width = camera.videoWidth || camera.clientWidth;
-    canvas.height = camera.videoHeight || camera.clientHeight;
-
-    // Disegna il frame corrente del video sul canvas
-    context.drawImage(camera, 0, 0, canvas.width, canvas.height);
-
-    // Converte il contenuto del canvas in Base64 (JPEG)
-    const dataURL = canvas.toDataURL('image/jpeg');
-
-    // Invia al server
-    const response = await fetch('/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: dataURL })
-    });
-
-    const result = await response.json();
-    console.log("Risposta dal server:", result);
-
-    // Se il server risponde con un nome di carta
-    if (result.cardName) {
-      // Nascondi il video e interrompi lo stream
-      camera.style.display = "none";
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-
-      // Mostra l'immagine della carta
-      cardDisplay.src = `/Illustrazioni/${result.cardName}.jpg`; 
-      cardDisplay.style.display = "block"; 
+  
+  // SEZIONE FOTOCAMERA
+  const cameraIcon = document.getElementById('camera-icon');
+  const camera = document.getElementById('camera');         // <video id="camera"> in HTML
+  const cardDisplay = document.getElementById('card-display'); // <img id="card-display"> in HTML
+  const logoContainer = document.getElementById('logo-container');
+  const bottomSection = document.getElementById('bottom-section');
+  const camera_container = document.getElementById('camera-container');
+  const cameraIcon2 = document.getElementById('camera-icon-2');
+  let stream = null;
+  
+  async function startCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error("Il browser non supporta getUserMedia.");
+      return;
     }
-
-  } catch (error) {
-    console.error("Errore durante la POST:", error);
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment"}, audio: false });
+      camera.srcObject = stream;
+      // Rendi visibile il video e impostalo in modo che occupi lo schermo
+      camera_container.style.display = 'block';
+      camera.style.display = 'block';
+      cameraIcon2.style.display = 'block';
+      camera.style.position = 'absolute';
+      camera.style.top = '50%';
+      camera.style.left = '50%';
+      camera.style.transform = 'translate(-50%, -50%)';
+      camera.style.aspectRatio = '9/16';
+      camera.style.borderRadius = '8px';
+      camera.style.width = '70%';      // oppure un valore fisso se preferisci
+      camera.style.zIndex = '10';         // assicura che sia sopra gli altri elementi
+    } catch (err) {
+      console.error("Errore nell'accedere alla fotocamera:", err);
+    }
   }
-}
-
-/**
- * Gestore del click/touch sull'icona fotocamera
- */
-async function handleCameraIconClick() {
-  // Se la fotocamera non è ancora avviata, la avviamo
-  if (!stream) {
-    await startCamera();
-  } else {
-    // Altrimenti catturiamo e inviamo il frame
-    captureAndSendFrame();
+  
+  async function captureAndSendFrame() {
+    try {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      
+      canvas.width = camera.videoWidth || camera.clientWidth;
+      canvas.height = camera.videoHeight || camera.clientHeight;
+      
+      context.drawImage(camera, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/jpeg');
+      
+      // Invia il frame al server
+      const response = await fetch('/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataURL })
+      });
+      
+      const result = await response.json();
+      console.log("Risposta dal server:", result);
+      
+      if (result.cardName) {
+        // Nascondi il video e interrompi lo stream
+        camera.style.display = "none";
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+        
+        // Mostra l'immagine della carta
+        cardDisplay.src = `/Illustrazioni/${result.cardName}.jpg`;
+        cardDisplay.style.display = "block";
+      }
+      
+    } catch (error) {
+      console.error("Errore durante la POST:", error);
+    }
   }
-}
-
-// Listener al caricamento del DOM
-document.addEventListener('DOMContentLoaded', () => {
+  
+  async function handleCameraIconClick() {
+    // Nascondi gli elementi non relativi alla fotocamera
+    if (logoContainer) logoContainer.style.display = 'none';
+    if (bottomSection) bottomSection.style.display = 'none';
+    if (cameraIcon) cameraIcon.style.display = 'none';
+    if (cameraIcon2) cameraIcon2.style.display = 'none';
+        
+    // Avvia la fotocamera o cattura un frame se già attiva
+    if (!stream) {
+      await startCamera();
+    } else {
+      console.log("Cattura e invia un frame");
+      captureAndSendFrame();
+    }
+  }
+  
   if (cameraIcon) {
-    // Click
     cameraIcon.addEventListener('click', handleCameraIconClick);
-    // Touch (per mobile)
     cameraIcon.addEventListener('touchstart', (e) => {
       e.preventDefault();
       handleCameraIconClick();
     });
   }
-});
 
+
+  if (cameraIcon2){
+    cameraIcon2.addEventListener('click', handleCameraIconClick);
+    cameraIcon2.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleCameraIconClick();
+    });  
+  }
+
+});

@@ -24,14 +24,25 @@
       <div id="logo-container">
         <img id="logo-home" src="images/logo.png" alt="The Sip Logo">
       </div>
-      <!-- Icona fotocamera (già presente) -->
+
+      <!-- Icona fotocamera al centro, da cliccare per attivare la scansione -->
       <img id="camera-icon" src="images/camera.png" alt="Camera Icon" />
-      <!-- Video per mostrare l’anteprima della fotocamera (inizialmente nascosto?) -->
-      <video id="camera" autoplay playsinline muted style="display: none;"></video>
+
+      <!-- Contenitore che mostra la fotocamera e l'overlay (inizialmente nascosto) -->
+      <div id="camera-container" style="display: none;">
+        <!-- Video per l’anteprima della fotocamera -->
+        <video id="camera" autoplay playsinline muted></video>
+        <img id="camera-icon-2" src="images/camera.png" alt="Camera Icon per il secondo click" style=" display:none;" />
+        <!-- Overlay per evidenziare l'area di scansione -->
+        <div class="scanner-overlay">
+          <div class="scanner-box"></div>
+        </div>
+      </div>
+
       <!-- Un contenitore (img o div) per mostrare l’immagine/carta riconosciuta -->
       <img id="card-display" style="display: none;" />
 
-      <!-- Sezione inferiore: bimba1 (pulsante per "Gli autori") a sinistra e footer a destra -->
+      <!-- Sezione inferiore: bimba1 (pulsante per "Gli autori") a sinistra e bimba2 a destra -->
       <div id="bottom-section">
         <div id="bimba1">
           <img src="images/bimba1.png" alt="Immagine autori" class="bimba">
@@ -45,7 +56,7 @@
     </div>
   </div>
 
-  <!-- Collega lo script -->
+
   <script src="js/script.js"></script>
 </body>
 </html>
