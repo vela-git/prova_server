@@ -14,16 +14,15 @@
   <div class="container">
     <!-- Sezione Loading -->
     <div id="loading" class="page loading">
-      <!-- Il logo grande, centrale, che attiverà la transizione al tocco -->
-      <img id="logo-loading" src="images/logo.png" alt="The Sip Logo">
+      <!-- Sfondo dark-bg -->
+      <img id="loading-bg" src="images/dark-bg.png" alt="Dark Background">
     </div>
+
+    <!-- Logo singolo, indipendente -->
+    <img id="logo" src="images/logo.png" alt="The Sip Logo">
 
     <!-- Sezione Homepage -->
     <div id="homepage" class="page homepage">
-      <!-- Logo in alto, centrato (identico al logo finale della transizione) -->
-      <div id="logo-container">
-        <img id="logo-home" src="images/logo.png" alt="The Sip Logo">
-      </div>
 
       <!-- Icona fotocamera al centro, da cliccare per attivare la scansione -->
       <img id="camera-icon" src="images/camera.png" alt="Camera Icon" />
@@ -53,6 +52,13 @@
           <span class="bottom-text">Copyright</span>
         </div>
       </div>
+      <!-- Elemento per la GIF di caricamento -->
+      <img id="loading-gif" src="https://loading.io/asset/778317" alt="Caricamento" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 15;">
+      <!-- Banner per il tentativo fallito -->
+      <div id="retry-banner" style="display: none; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 16;">
+        Errore nel riconoscimento. Riprova.
+      </div>
+
     </div>
   </div>
 
