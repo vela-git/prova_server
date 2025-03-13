@@ -31,7 +31,7 @@
       <div id="camera-container" style="display: none;">
         <!-- Video per l’anteprima della fotocamera -->
         <video id="camera" autoplay playsinline muted></video>
-        <img id="camera-icon-2" src="images/camera.png" alt="Camera Icon per il secondo click" style=" display:none;" />
+        <img id="camera-icon-2" src="images/camera.png" alt="Camera Icon per il secondo click" style="display: none;" />
         <!-- Overlay per evidenziare l'area di scansione -->
         <div class="scanner-overlay">
           <div class="scanner-box"></div>
@@ -52,8 +52,13 @@
           <span class="bottom-text">Copyright</span>
         </div>
       </div>
+      
+      <!-- Container per mostrare il risultato dell'inferenza -->
+      <div id="result-container" style="margin-top: 20px; text-align: center;"></div>
+      
       <!-- Elemento per la GIF di caricamento -->
       <img id="loading-gif" src="https://loading.io/asset/778317" alt="Caricamento" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 15;">
+      
       <!-- Banner per il tentativo fallito -->
       <div id="retry-banner" style="display: none; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 16;">
         Errore nel riconoscimento. Riprova.
@@ -61,7 +66,6 @@
 
     </div>
   </div>
-
 
   <script src="js/script.js"></script>
 </body>

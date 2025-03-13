@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Errore nell'accedere alla fotocamera:", err);
     }
   }
-  
   async function captureAndSendFrame() {
     try {
       // Mostra la GIF di caricamento e nascondi il banner di riprova (se visibile)
@@ -106,27 +105,36 @@ document.addEventListener('DOMContentLoaded', () => {
       // Nascondi la GIF di caricamento
       loadingGif.style.display = 'none';
       
-      if (result.cardName) {
-        // In caso di risposta positiva, interrompi lo stream e reindirizza alla pagina illustrazioni
+      // Mostra il risultato nel result-container
+      if (result.predicted_class_name) {
+        const resultContainer = document.getElementById('result-container');
+        if (resultContainer) {
+          resultContainer.innerHTML = `
+            <h1>Risultato Inferenza</h1>
+            <p><strong>Classe:</strong> ${result.predicted_class}</p>
+            <p><strong>Nome Carta:</strong> ${result.predicted_class_name}</p>
+            <p><strong>Confidenza:</strong> ${(result.confidence * 100).toFixed(2)}%</p>
+          `;
+        } else {
+          console.error("Elemento 'result-container' non trovato nel DOM.");
+        }
+        // (Opzionale) Interrompi lo stream della fotocamera se non serve più
         camera.style.display = "none";
         if (stream) {
           stream.getTracks().forEach(track => track.stop());
         }
-        window.location.href = 'illustrazioni.html';
       } else {
-        // Se la risposta non è corretta, lancia un errore per attivare il blocco catch
-        throw new Error("Nessuna cardName nella risposta");
+        console.error("Il risultato non contiene 'predicted_class_name'.");
+        throw new Error("Nessuna predicted_class_name nella risposta");
       }
     } catch (error) {
       console.error("Errore durante la POST:", error);
-      // Nascondi la GIF di caricamento
       loadingGif.style.display = 'none';
-      // Mostra il banner di riprova
       retryBanner.style.display = 'block';
-      // Riavvia lo stream della fotocamera per permettere un nuovo scatto
       await startCamera();
     }
   }
+  
   
   async function handleCameraIconClick() {
     // Nascondi gli elementi non relativi alla fotocamera

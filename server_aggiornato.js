@@ -6,7 +6,7 @@ const http = require('http');
 const axios = require('axios');
 const FormData = require('form-data'); // Import form-data package
 
-// (Opzionale) Array con i nomi delle classi, se vuoi mappare indice → stringa
+// Array con i nomi delle classi (l'ordine deve corrispondere a quello usato in training)
 const classNames = [
   '10_FINNING', '11_SCHOOLING', '12_SPECIE CHIAVE', '13_IPNOSI', '14_CORALLIGENO',
   '15_BLOOM ALGALE', '16_CANYON SOTTOMARINI', '17_NEVE MARINA', '18_BIOLUMINESCENZA',
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 // Servire file statici dalla cartella "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rotte semplici
+// Rotte semplici per le pagine
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -44,35 +44,37 @@ app.get('/prova', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'prova.html'));
 });
 
-// Parsing JSON con limite 10MB (per immagini base64)
+// Parsing JSON con limite 10MB (per immagini Base64)
 app.use(express.json({ limit: '10mb' }));
 
 // Tipi di immagini ammessi
 const allowedMimeTypes = ['image/jpeg', 'image/png'];
 
+// Variabile globale per memorizzare l'ultimo risultato dell'inferenza
+let latestInferenceResult = null;
+
+// Endpoint /upload: riceve l'immagine in Base64, la salva e invia la richiesta al server Flask
 app.post('/upload', async (req, res) => {
   try {
-    // 1) Prende l'immagine dal body
+    // 1) Estrae l'immagine dal body
     const { image } = req.body;
     if (!image) {
       return res.status(400).json({ error: 'No image provided' });
     }
 
-    // 2) Controlla che sia in formato dataURL Base64
+    // 2) Controlla che l'immagine sia in formato dataURL Base64
     const matches = image.match(/^data:([^;]+);base64,(.+)$/);
     if (!matches || matches.length !== 3) {
       return res.status(400).json({ error: 'Invalid image data' });
     }
-
     const mimeType = matches[1];
     if (!allowedMimeTypes.includes(mimeType)) {
       return res.status(400).json({ error: 'Unsupported image type' });
     }
-
     const base64Data = matches[2];
     const imageBuffer = Buffer.from(base64Data, 'base64');
 
-    // 3) Controlla la dimensione dell'immagine
+    // 3) Verifica la dimensione dell'immagine (max 10MB)
     if (imageBuffer.length > 10 * 1024 * 1024) {
       return res.status(400).json({ error: 'Image is too large' });
     }
@@ -91,14 +93,13 @@ app.post('/upload', async (req, res) => {
     const fileName = 'image_' + Date.now() + extension;
     const filePath = path.join(uploadDir, fileName);
 
-    // 6) Scrive il file su disco e poi effettua l'inferenza
+    // 6) Scrive il file su disco e invia la richiesta al server Flask per l'inferenza
     fs.writeFile(filePath, imageBuffer, async (err) => {
       if (err) {
         console.error('Error saving image:', err);
         return res.status(500).json({ error: 'Error saving image' });
       }
 
-      // 7) Prepara la richiesta al server Python per l'inferenza
       try {
         const formData = new FormData();
         formData.append('image', fs.createReadStream(filePath));
@@ -108,13 +109,16 @@ app.post('/upload', async (req, res) => {
           rejectUnauthorized: false
         });
 
-        // Assumi che il server Python sia in esecuzione su https://localhost:5000
+        // Invia la richiesta al server Flask (in esecuzione in HTTPS su 127.0.0.1:5000)
         const response = await axios.post('https://127.0.0.1:5000/predict', formData, {
           headers: formData.getHeaders(),
           httpsAgent
         });
 
-        // Ritorna il risultato ottenuto dal server Python
+        // Memorizza il risultato in latestInferenceResult
+        latestInferenceResult = response.data;
+
+        // Ritorna il risultato al client
         return res.json(response.data);
       } catch (error) {
         console.error('Error calling inference server:', error);
@@ -127,12 +131,43 @@ app.post('/upload', async (req, res) => {
   }
 });
 
-// Avvia server HTTPS sulla porta 443
+// Endpoint per ricevere direttamente il risultato dell'inferenza dal server Flask
+app.post('/inference_result', (req, res) => {
+  const result = req.body;
+  latestInferenceResult = result;
+  console.log('Inference result received from Flask:', result);
+  res.json({ status: 'received' });
+});
+
+// Endpoint per mostrare il risultato a schermo
+app.get('/result', (req, res) => {
+  if (!latestInferenceResult) {
+    return res.send("<h1>Nessun risultato disponibile</h1>");
+  }
+  const { predicted_class, predicted_class_name, confidence, saved_image } = latestInferenceResult;
+  // Interpreta il risultato: in questo esempio stampiamo semplicemente le informazioni
+  res.send(`
+    <html>
+      <head>
+        <title>Risultato Inferenza</title>
+      </head>
+      <body>
+        <h1>Risultato Inferenza</h1>
+        <p><strong>Classe Predetta:</strong> ${predicted_class}</p>
+        <p><strong>Nome Carta:</strong> ${predicted_class_name}</p>
+        <p><strong>Confidenza:</strong> ${(confidence * 100).toFixed(2)}%</p>
+        <p><strong>Immagine salvata:</strong> ${saved_image}</p>
+      </body>
+    </html>
+  `);
+});
+
+// Avvia il server HTTPS sulla porta 443
 https.createServer(options, app).listen(443, () => {
   console.log('✅ Server HTTPS in esecuzione sulla porta 443');
 });
 
-// Server HTTP su porta 80 che reindirizza a HTTPS
+// Avvia anche un server HTTP su porta 80 per reindirizzare a HTTPS
 http.createServer((req, res) => {
   res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
   res.end();
