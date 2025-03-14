@@ -14,16 +14,17 @@
   <div class="container">
     <!-- Sezione Loading -->
     <div id="loading" class="page loading">
-      <!-- Sfondo dark-bg -->
       <img id="loading-bg" src="images/dark-bg.png" alt="Dark Background">
     </div>
 
-    <!-- Logo singolo, indipendente -->
+    <!-- Logo singolo -->
     <img id="logo" src="images/logo.png" alt="The Sip Logo">
+
+    <!-- Menu a tendina per la selezione della fotocamera (inizialmente nascosto) -->
+    <select id="camera-select" style="display: none;"></select>
 
     <!-- Sezione Homepage -->
     <div id="homepage" class="page homepage">
-
       <!-- Icona fotocamera al centro, da cliccare per attivare la scansione -->
       <img id="camera-icon" src="images/camera.png" alt="Camera Icon" />
 
@@ -38,10 +39,10 @@
         </div>
       </div>
 
-      <!-- Un contenitore (img o div) per mostrare l’immagine/carta riconosciuta -->
+      <!-- Un contenitore per mostrare l’immagine/carta riconosciuta -->
       <img id="card-display" style="display: none;" />
 
-      <!-- Sezione inferiore: bimba1 (pulsante per "Gli autori") a sinistra e bimba2 a destra -->
+      <!-- Sezione inferiore: bimba1 e bimba2 -->
       <div id="bottom-section">
         <div id="bimba1">
           <img src="images/bimba1.png" alt="Immagine autori" class="bimba">
@@ -63,7 +64,6 @@
       <div id="retry-banner" style="display: none; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 16;">
         Errore nel riconoscimento. Riprova.
       </div>
-
     </div>
   </div>
 
