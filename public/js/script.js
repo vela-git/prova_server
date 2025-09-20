@@ -8,13 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingSection.style.display = 'none';
     logo.classList.add('final');
   } else {
-    logo.addEventListener('click', () => {
+    // Funzione per avviare l'animazione
+    function startAnimation() {
       logo.classList.add('transition');
       loadingBg.classList.add('bg-transition');
       logo.addEventListener('transitionend', () => {
         loadingSection.style.display = 'none';
         sessionStorage.setItem('animationDone', true);
       }, { once: true });
+    }
+    
+    // Ascolta i click su tutta la sezione loading
+    loadingSection.addEventListener('click', startAnimation);
+    
+    // Ascolta i click anche direttamente sul logo
+    logo.addEventListener('click', startAnimation);
+    
+    // Aggiungi anche gli eventi touchstart per dispositivi mobili
+    loadingSection.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startAnimation();
+    });
+    
+    logo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startAnimation();
     });
   }
 
